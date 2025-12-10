@@ -9,9 +9,10 @@ void setup() {
   Serial.begin(115200);
   feetechBus.begin();
 
-  while (!Serial) {
+  while (Serial.read() != 'a') {
+    Serial.println("press a to continue...");
+    delay(1000);
   }
-  delay(1000);
 
   {
     int motor_id_old = -1;
