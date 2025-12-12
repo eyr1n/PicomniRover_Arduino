@@ -67,11 +67,10 @@ void loop() {
   float vy = cmd.vy;
   float w = cmd.w;
 
-  float v1 = (vx * sin(0.0f) + vy * cos(0.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
+  float v1 = (-vx * sin(PI / 2.0f) + vy * cos(PI / 2.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
   float v2 =
-      (vx * sin(PI * 2.0f / 3.0f) + vy * cos(PI * 2.0f / 3.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
-  float v3 =
-      (vx * sin(PI * 4.0f / 3.0f) + vy * cos(PI * 4.0f / 3.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
+      (-vx * sin(PI * 7.0f / 6.0f) + vy * cos(PI * 7.0f / 6.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
+  float v3 = (-vx * sin(-PI / 6.0f) + vy * cos(-PI / 6.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
 
   // モーター速度送信
   motor1.setVelocity(RPS_TO_FEETECH(v1));
@@ -80,10 +79,9 @@ void loop() {
 
   float d1 = 2.0f * PI * WHEEL_RADIUS * FEETECH_TO_RPS(motor1_vel) * delta_s;
   float d2 = 2.0f * PI * WHEEL_RADIUS * FEETECH_TO_RPS(motor2_vel) * delta_s;
-  float d3 = 2.0f * PI * WHEEL_RADIUS * FEETECH_TO_RPS(motor3_vel) * delta_s;
 
-  float local_dx = d1 * sin(0.0f) + d2 * sin(PI * 2.0f / 3.0f) + d3 * sin(PI * 4.0f / 3.0f);
-  float local_dy = d1 * cos(0.0f) + d2 * cos(PI * 2.0f / 3.0f) + d3 * cos(PI * 4.0f / 3.0f);
+  float local_dx = (d1 * cos(PI * 7.0f / 6.0f) - d2 * cos(PI / 2.0f)) / sin(PI * 7.0f / 6.0f - PI / 2.0f);
+  float local_dy = (d1 * sin(PI * 7.0f / 6.0f) - d2 * sin(PI / 2.0f)) / sin(PI * 7.0f / 6.0f - PI / 2.0f);
 
   float global_dx = local_dx * cos(yaw) - local_dy * sin(yaw);
   float global_dy = local_dx * sin(yaw) + local_dy * cos(yaw);
