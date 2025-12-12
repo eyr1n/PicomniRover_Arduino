@@ -28,6 +28,15 @@ void setup() {
   Serial.begin(115200);
 
   feetechBus.begin();
+
+  // モーターの起動を待つ
+  while (!motor1.ping())
+    ;
+  while (!motor2.ping())
+    ;
+  while (!motor3.ping())
+    ;
+
   motor1.controlMode(1);
   motor2.controlMode(1);
   motor3.controlMode(1);
@@ -58,11 +67,11 @@ void loop() {
   float vy = cmd.vy;
   float w = cmd.w;
 
-  float v1 = (vy * cos(0.0f) + vx * sin(0.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
+  float v1 = (vx * sin(0.0f) + vy * cos(0.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
   float v2 =
-      (vy * cos(PI * 2.0f / 3.0f) + vx * sin(PI * 2.0f / 3.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
+      (vx * sin(PI * 2.0f / 3.0f) + vy * cos(PI * 2.0f / 3.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
   float v3 =
-      (vy * cos(PI * 4.0f / 3.0f) + vx * sin(PI * 4.0f / 3.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
+      (vx * sin(PI * 4.0f / 3.0f) + vy * cos(PI * 4.0f / 3.0f) + w * ROBOT_RADIUS) / (2.0f * M_PI * WHEEL_RADIUS);
 
   // モーター速度送信
   motor1.setVelocity(RPS_TO_FEETECH(v1));
@@ -76,8 +85,8 @@ void loop() {
   float local_dx = d1 * sin(0.0f) + d2 * sin(PI * 2.0f / 3.0f) + d3 * sin(PI * 4.0f / 3.0f);
   float local_dy = d1 * cos(0.0f) + d2 * cos(PI * 2.0f / 3.0f) + d3 * cos(PI * 4.0f / 3.0f);
 
-  float global_dx = local_dy * sin(yaw) + local_dx * cos(yaw);
-  float global_dy = local_dy * cos(yaw) - local_dx * sin(yaw);
+  float global_dx = local_dx * cos(yaw) - local_dy * sin(yaw);
+  float global_dy = local_dx * sin(yaw) + local_dy * cos(yaw);
 
   x += global_dx;
   y += global_dy;

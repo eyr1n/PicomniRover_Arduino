@@ -80,8 +80,8 @@ void WirelessControl::setOdometry(Odometry odom) {
   }
 }
 
-uint16_t WirelessControl::readCallback(hci_con_handle_t con_handle, uint16_t attribute_handle, uint16_t offset,
-                                       uint8_t *buffer, uint16_t buffer_size) {
+uint16_t WirelessControl::readCallback(hci_con_handle_t, uint16_t attribute_handle, uint16_t offset, uint8_t *buffer,
+                                       uint16_t buffer_size) {
   if (attribute_handle == ATT_CHARACTERISTIC_87BC2DC5_2207_408D_99F6_3D35573C4472_01_CLIENT_CONFIGURATION_HANDLE) {
     return att_read_callback_handle_little_endian_16(client_configuration, offset, buffer, buffer_size);
   }
@@ -95,8 +95,11 @@ int WirelessControl::writeCallback(hci_con_handle_t con_handle, uint16_t attribu
   }
 
   if (attribute_handle == ATT_CHARACTERISTIC_87BC2DC5_2207_408D_99F6_3D35573C4472_01_VALUE_HANDLE) {
+    if (offset != 0) {
+      return ATT_ERROR_INVALID_OFFSET;
+    }
     if (buffer_size != sizeof(Command)) {
-      return 0;
+      return ATT_ERROR_INVALID_ATTRIBUTE_VALUE_LENGTH;
     }
 
     Command cmd;
@@ -112,7 +115,7 @@ int WirelessControl::writeCallback(hci_con_handle_t con_handle, uint16_t attribu
     }
 
     // notify
-    if (client_configuration != 0) {
+    if (client_configuration != 0 && client_configuration_connection == con_handle) {
       odom_callback.callback = canSendNowCallback;
       odom_callback.context = (void *)(uintptr_t)client_configuration_connection;
       att_server_register_can_send_now_callback(&odom_callback, client_configuration_connection);

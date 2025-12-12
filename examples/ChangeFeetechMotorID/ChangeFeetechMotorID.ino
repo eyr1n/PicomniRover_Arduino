@@ -33,8 +33,8 @@ void setup() {
     }
 
     Serial.printf("press y to change motor id from %d to %d:\r\n", motor_id_old, MOTOR_ID_NEW);
-    while (Serial.read() != 'y') {
-    }
+    while (Serial.read() != 'y')
+      ;
 
     FeetechServo motor(motor_id_old, &feetechBus);
     uint8_t buf;
