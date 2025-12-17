@@ -1,3 +1,5 @@
+#ifdef ENABLE_CLASSIC
+
 #include <cstdint>
 #include <cstring>
 
@@ -135,3 +137,5 @@ void WirelessControl::canSendNowCallback(void *context) {
   att_server_notify(con_handle, ATT_CHARACTERISTIC_87BC2DC5_2207_408D_99F6_3D35573C4472_01_VALUE_HANDLE, odom_buf,
                     sizeof(odom_buf));
 }
+
+#endif
