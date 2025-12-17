@@ -1,6 +1,6 @@
 #pragma once
 
-#include <_needsbt.h>
+#ifdef ENABLE_CLASSIC
 
 #include <btstack.h>
 
@@ -37,3 +37,5 @@ private:
                            uint16_t offset, uint8_t *buffer, uint16_t buffer_size);
   static void canSendNowCallback(void *context);
 };
+
+#endif
