@@ -1,4 +1,4 @@
-#include <PicomniRover.h>
+#include <FeetechServo.h>
 
 // 新しいFeetechモーターID
 #define MOTOR_ID_NEW 2
@@ -9,15 +9,11 @@ void setup() {
   Serial.begin(115200);
   feetechBus.begin();
 
-  while (Serial.read() != 'a') {
-    Serial.println("press a to continue...");
-    delay(1000);
-  }
-
   {
-    int motor_id_old = -1;
+    int motor_id_old;
 
     // search motor id
+    while (true) {
     for (int i = 0; i < 254; ++i) {
       FeetechServo motor(i, &feetechBus);
       if (motor.ping()) {
@@ -26,15 +22,12 @@ void setup() {
       }
       delay(20);
     }
-
-    if (motor_id_old == -1) {
-      Serial.println("motor not found");
-      return;
     }
 
-    Serial.printf("press y to change motor id from %d to %d:\r\n", motor_id_old, MOTOR_ID_NEW);
-    while (Serial.read() != 'y')
-      ;
+    while (Serial.read() != 'y') {
+      Serial.printf("press y to change motor id from %d to %d:\r\n", motor_id_old, MOTOR_ID_NEW);
+      delay(1000);
+    }
 
     FeetechServo motor(motor_id_old, &feetechBus);
     uint8_t buf;
