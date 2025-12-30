@@ -15,4 +15,4 @@
 
 MIT ライセンス
 
-本ライブラリは、BlueKitchen GmbH 提供の BTstack を使用しています。著作権表示とライセンスの詳細は `NOTICE` を参照してください。
+本ライブラリは、BlueKitchen GmbH 提供の BTstack を使用しています。著作権表示とライセンスの詳細は [NOTICE](NOTICE) を参照してください。
